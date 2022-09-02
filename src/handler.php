@@ -6,6 +6,7 @@ class Handler
 {
 
     private $user;
+    private $url;
 
     function __construct()
     {
@@ -15,6 +16,8 @@ class Handler
 
     public function handleMethod()
     {
+        $this->url = strtok($_SERVER["REQUEST_URI"], '?');
+
         switch ($_SERVER['REQUEST_METHOD']) {
             case 'GET':
                 return $this->get();
@@ -30,7 +33,7 @@ class Handler
     private function get()
     {
 
-        switch ($_SERVER['REQUEST_URI']) {
+        switch ($this->url) {
 
             case '/allusers':
                 $this->user->getAllUsers();
@@ -43,7 +46,7 @@ class Handler
     private function post()
     {
 
-        switch ($_SERVER['REQUEST_URI']) {
+        switch ($this->url) {
 
             case '/':
                 echo '/';
@@ -54,7 +57,7 @@ class Handler
     private function put()
     {
 
-        switch ($_SERVER['REQUEST_URI']) {
+        switch ($this->url) {
 
             case '/':
                 echo '/';
@@ -65,7 +68,7 @@ class Handler
     private function delete()
     {
 
-        switch ($_SERVER['REQUEST_URI']) {
+        switch ($this->url) {
 
             case '/':
                 echo '/';
