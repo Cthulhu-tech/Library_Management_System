@@ -9,7 +9,8 @@ class Database
     ];
 
     protected $pdoOptions = array(
-        PDO::ATTR_PERSISTENT => true
+        PDO::ATTR_PERSISTENT => true,
+        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"
     );
 
     protected $host;
@@ -55,5 +56,17 @@ class Database
     {
 
         return password_hash($password, PASSWORD_BCRYPT, $this->options);
+    }
+
+    public function messageResponse(int $code = 200, string $message = "Ok")
+    {
+
+        http_response_code($code);
+
+        $messageObj = new stdClass();
+
+        $messageObj->message = $message;
+
+        echo json_encode($messageObj);
     }
 }
