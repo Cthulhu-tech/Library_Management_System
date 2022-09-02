@@ -1,24 +1,13 @@
-<?
+<?php
 
-    require "../../../vendor/autoload.php";
+require "vendor/autoload.php";
 
-    class Env {
+class Env
+{
+    public function getEnv()
+    {
 
-        private $path = "./.env";
-
-        function __construct(string $path = "./.env") {
-
-            $this->path = $path;
-
-        }
-
-        public function getEnv() {
-
-            $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-            $dotenv -> load();
-            
-        }
-
+        $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../../');
+        $dotenv->load();
     }
-
-?>
+}

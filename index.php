@@ -1,26 +1,32 @@
-<?
+<?php
 
-    require './src/utils/env/env.php';
+require './src/utils/env/env.php';
+require './src/handler.php';
 
-class Project {
+class Project
+{
+    private $env;
+    private $handler;
 
-    private $env = new Env(this$path); 
-
-    function __construct() {
-
-        
-
+    function Main()
+    {
+        $this->loadEnv();
+        $this->handleUri();
     }
 
-    function Main() {
-
-        
-
+    private function loadEnv()
+    {
+        $this->env = new Env();
+        $this->env->getEnv();
     }
 
+    private function handleUri()
+    {
+
+        $this->handler = new Handler();
+        $this->handler->handleMethod();
+    }
 }
 
 $project = new Project();
-$project -> Main();
-
-?>
+$project->Main();
