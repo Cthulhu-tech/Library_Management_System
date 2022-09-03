@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '/../database/db.php';
+require_once __DIR__ . '/../utils/database/db.php';
 
 class UserCheck extends Database
 {
