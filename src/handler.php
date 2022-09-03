@@ -27,6 +27,8 @@ class Handler
                 return $this->put();
             case 'DELETE':
                 return $this->delete();
+            default:
+                echo 'this method not implemented';
         }
     }
 
@@ -38,9 +40,6 @@ class Handler
             case '/allusers':
                 $this->user->getUsers();
                 break;
-            case '/user':
-                $this->user->getUser();
-                break;
             default:
                 echo 'this method not implemented';
         }
@@ -51,9 +50,14 @@ class Handler
 
         switch ($this->url) {
 
-            case '/':
-                echo '/';
-                return;
+            case '/user':
+                $this->user->getUser();
+                break;
+            case '/setuser':
+                $this->user->setUser();
+                break;
+            default:
+                echo 'this method not implemented';
         }
     }
 
@@ -62,9 +66,11 @@ class Handler
 
         switch ($this->url) {
 
-            case '/':
-                echo '/';
-                return;
+            case '/updateuser':
+                $this->user->updateUser();
+                break;
+            default:
+                echo 'this method not implemented';
         }
     }
 
@@ -73,9 +79,11 @@ class Handler
 
         switch ($this->url) {
 
-            case '/':
-                echo '/';
-                return;
+            case '/deleteuser':
+                $this->user->deleteUser();
+                break;
+            default:
+                echo 'this method not implemented';
         }
     }
 }
