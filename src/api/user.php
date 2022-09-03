@@ -52,14 +52,11 @@ class User extends Database
             return false;
         }
 
-        $name = $this->checkUser->getThisName();
-        $surname = $this->checkUser->getThisSurName();
-
         $this->createDatabase();
 
         $this->result = $this->getDB()->prepare("SELECT * FROM user_library WHERE name LIKE ? AND surname LIKE ?");
 
-        $this->result->execute(array($name . "%", $surname . "%"));
+        $this->result->execute(array($this->checkUser->getThisName() . "%", $this->checkUser->getThisSurName() . "%"));
 
         $row = json_encode($this->result->fetchAll(PDO::FETCH_ASSOC), JSON_UNESCAPED_UNICODE);
 
@@ -78,16 +75,11 @@ class User extends Database
             return false;
         }
 
-        $name = $this->checkUser->getThisName();
-        $surname = $this->checkUser->getThisSurName();
-        $passport_last = $this->checkUser->getThisPasswordLast();
-        $passport_first = $this->checkUser->getThisPasswordFirst();
-
         $this->createDatabase();
 
         $this->result = $this->getDB()->prepare(" SELECT `sp_check_user_add`(?, ?, ?, ?) AS `status`");
 
-        $this->result->execute(array($name, $surname, $passport_first, $passport_last));
+        $this->result->execute(array($this->checkUser->getThisName(), $this->checkUser->getThisSurName(), $this->checkUser->getThisPasswordLast(), $this->checkUser->getThisPasswordFirst()));
 
         $status = json_encode($this->result->fetchAll(PDO::FETCH_ASSOC)[0]['status'], JSON_UNESCAPED_UNICODE);
 
@@ -113,17 +105,11 @@ class User extends Database
             return false;
         }
 
-        $id = $this->checkUser->getThisId();
-        $name = $this->checkUser->getThisName();
-        $surname = $this->checkUser->getThisSurName();
-        $passport_last = $this->checkUser->getThisPasswordLast();
-        $passport_first = $this->checkUser->getThisPasswordFirst();
-
         $this->createDatabase();
 
         $this->result = $this->getDB()->prepare(" SELECT `sp_update_user`(?, ?, ?, ?, ?) AS `status`");
 
-        $this->result->execute(array($id, $name, $surname, $passport_first, $passport_last));
+        $this->result->execute(array($this->checkUser->getThisId(), $this->checkUser->getThisName(), $this->checkUser->getThisSurName(), $this->checkUser->getThisPasswordLast(), $this->checkUser->getThisPasswordFirst()));
 
         $status = json_encode($this->result->fetchAll(PDO::FETCH_ASSOC)[0]['status'], JSON_UNESCAPED_UNICODE);
 
@@ -149,17 +135,12 @@ class User extends Database
             return false;
         }
 
-        $id = $this->checkUser->getThisId();
-        $name = $this->checkUser->getThisName();
-        $surname = $this->checkUser->getThisSurName();
-        $passport_last = $this->checkUser->getThisPasswordLast();
-        $passport_first = $this->checkUser->getThisPasswordFirst();
-
         $this->createDatabase();
 
         $this->result = $this->getDB()->prepare(" SELECT `sp_delete_user`(?, ?, ?, ?, ?) AS `status`");
 
-        $this->result->execute(array($id, $name, $surname, $passport_first, $passport_last));
+        $this->result->execute(
+            array($this->checkUser->getThisId(), $this->checkUser->getThisName(), $this->checkUser->getThisSurName(), $this->checkUser->getThisPasswordLast(), $this->checkUser->getThisPasswordFirst()));
 
         $status = json_encode($this->result->fetchAll(PDO::FETCH_ASSOC)[0]['status'], JSON_UNESCAPED_UNICODE);
 
