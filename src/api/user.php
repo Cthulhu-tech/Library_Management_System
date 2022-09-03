@@ -9,7 +9,6 @@ class User extends Database
 
     function __construct()
     {
-        header('Content-Type: application/json');
 
         parent::__construct();
     }
@@ -21,6 +20,14 @@ class User extends Database
 
             $this->limit = $_GET['limit'];
             $this->offset = $_GET['offset'];
+
+            if(!is_int($_GET['limit']) || !is_int($_GET['offset'])) {
+
+                echo $this->messageResponse(400, 'sorry, limit or offset is not a number.');
+                
+                return false;
+
+            }
 
             $this->createDatabase();
 
@@ -35,9 +42,9 @@ class User extends Database
                 return false;
             }
 
-            if ($this->limit === null || $this->offset === null) {
+            if ($this->offset > $limitUser) {
 
-                echo $this->messageResponse(400, 'exceeding the limit. max limit = ' . $limitUser);
+                echo $this->messageResponse(400, 'exceeding the offset. max offset = ' . $limitUser);
 
                 return false;
             }
@@ -60,7 +67,7 @@ class User extends Database
         return false;
     }
 
-    public function getAllUsers()
+    public function getUsers()
     {
 
         $check = $this->checkParams();
@@ -72,12 +79,20 @@ class User extends Database
 
         $this->createDatabase();
 
-        $this->result = $this->getDB()->query("SELECT * FROM user_library");
+        $this->result = $this->getDB()->prepare("SELECT * FROM user_library WHERE LIMIT ? , ?");
+
+        $this->result->execute(array( $this->offset,  $this->limit));
 
         $row = json_encode($this->result->fetchAll(PDO::FETCH_ASSOC), JSON_UNESCAPED_UNICODE);
 
         print_r($row);
 
         $this->closeConnection();
+    }
+
+    public function getUser() {
+
+        
+
     }
 }

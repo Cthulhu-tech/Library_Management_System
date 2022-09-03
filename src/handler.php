@@ -10,7 +10,7 @@ class Handler
 
     function __construct()
     {
-
+        header('Content-Type: application/json');
         $this->user = new User();
     }
 
@@ -36,7 +36,10 @@ class Handler
         switch ($this->url) {
 
             case '/allusers':
-                $this->user->getAllUsers();
+                $this->user->getUsers();
+                break;
+            case '/user':
+                $this->user->getUser();
                 break;
             default:
                 echo 'this method not implemented';
