@@ -8,7 +8,7 @@ class Book extends Database
     function __construct()
     {
 
-        $this->checkUser = new UserCheck();
+        $this->checkBook = new BookCheck();
         parent::__construct();
     }
 
@@ -23,5 +23,49 @@ class Book extends Database
     }
     public function deleteBook()
     {
+    }
+    public function getGanre()
+    {
+
+        $protected = $this->checkBook->checkGanre();
+
+        if (!$protected) {
+
+            $this->limitGanre();
+
+            return false;
+        }
+
+        $this->ganreWithFilter();
+    }
+
+    private function limitGanre()
+    {
+
+        $this->createDatabase();
+
+        $this->result = $this->getDB()->query('SELECT * FROM ganre LIMIT 5');
+
+        $row = json_encode($this->result->fetchAll(PDO::FETCH_ASSOC), JSON_UNESCAPED_UNICODE);
+
+        $this->closeConnection();
+
+        print_r($row);
+    }
+
+    private function ganreWithFilter()
+    {
+
+        $this->createDatabase();
+
+        $this->result = $this->getDB()->prepare("SELECT * FROM ganre WHERE ganre LIKE ? LIMIT 5");
+
+        $this->result->execute(array($this->checkBook->getGanre() . "%"));
+
+        $row = json_encode($this->result->fetchAll(PDO::FETCH_ASSOC), JSON_UNESCAPED_UNICODE);
+
+        $this->closeConnection();
+
+        print_r($row);
     }
 }

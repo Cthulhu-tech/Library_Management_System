@@ -37,9 +37,9 @@ class User extends Database
 
         $row = json_encode($this->result->fetchAll(PDO::FETCH_ASSOC), JSON_UNESCAPED_UNICODE);
 
-        print_r($row);
-
         $this->closeConnection();
+
+        print_r($row);
     }
 
     public function getUser()
@@ -140,7 +140,8 @@ class User extends Database
         $this->result = $this->getDB()->prepare(" SELECT `sp_delete_user`(?, ?, ?, ?, ?) AS `status`");
 
         $this->result->execute(
-            array($this->checkUser->getThisId(), $this->checkUser->getThisName(), $this->checkUser->getThisSurName(), $this->checkUser->getThisPasswordLast(), $this->checkUser->getThisPasswordFirst()));
+            array($this->checkUser->getThisId(), $this->checkUser->getThisName(), $this->checkUser->getThisSurName(), $this->checkUser->getThisPasswordLast(), $this->checkUser->getThisPasswordFirst())
+        );
 
         $status = json_encode($this->result->fetchAll(PDO::FETCH_ASSOC)[0]['status'], JSON_UNESCAPED_UNICODE);
 

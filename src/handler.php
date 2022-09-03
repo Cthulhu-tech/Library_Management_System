@@ -1,10 +1,11 @@
 <?php
 
 require __DIR__ . '/api/user.php';
+require __DIR__ . '/api/book.php';
 
 class Handler
 {
-
+    private $book;
     private $user;
     private $url;
 
@@ -12,6 +13,7 @@ class Handler
     {
         header('Content-Type: application/json');
         $this->user = new User();
+        $this->book = new Book();
     }
 
     public function handleMethod()
@@ -38,8 +40,11 @@ class Handler
         switch ($this->url) {
 
             case '/allusers':
-                $this->user->getUsers();
-                break;
+                return $this->user->getUsers();
+            case '/getbook':
+                return $this->book->getBook();
+            case '/getganre':
+                return $this->book->getGanre();
             default:
                 echo 'this method not implemented';
         }
@@ -51,11 +56,11 @@ class Handler
         switch ($this->url) {
 
             case '/user':
-                $this->user->getUser();
-                break;
+                return $this->user->getUser();
             case '/setuser':
-                $this->user->setUser();
-                break;
+                return $this->user->setUser();
+            case '/setbook':
+                return $this->book->setBook();
             default:
                 echo 'this method not implemented';
         }
@@ -67,8 +72,9 @@ class Handler
         switch ($this->url) {
 
             case '/updateuser':
-                $this->user->updateUser();
-                break;
+                return $this->user->updateUser();
+            case '/updatebook':
+                return $this->userbook->updateBook();
             default:
                 echo 'this method not implemented';
         }
@@ -80,8 +86,9 @@ class Handler
         switch ($this->url) {
 
             case '/deleteuser':
-                $this->user->deleteUser();
-                break;
+                return $this->user->deleteUser();
+            case '/deletebook':
+                return $this->book->deleteBook();
             default:
                 echo 'this method not implemented';
         }

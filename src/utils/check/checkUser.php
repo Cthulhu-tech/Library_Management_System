@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../utils/database/db.php';
+require_once __DIR__ . '/../database/db.php';
 
 class UserCheck extends Database
 {
@@ -101,7 +101,7 @@ class UserCheck extends Database
     {
         $data = json_decode(file_get_contents('php://input'), true);
 
-        if (!isset($data['id']) || !isset($data['name']) || !isset($data['surname']) || !isset($data['passport_first']) || !isset($data['passport_last'])) {
+        if (!isset($data['id']) || !isset($data['name']) || !isset($data['surname']) || !isset($data['passport_first']) || !!isset($data['passport_last'])) {
 
             echo $this->messageResponse(400, 'fill in at least one field');
 
