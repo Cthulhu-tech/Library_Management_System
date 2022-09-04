@@ -45,6 +45,8 @@ class Handler
                 return $this->book->getBook();
             case '/getganre':
                 return $this->book->getGanre();
+            case '/getganrebook':
+                return $this->book->getGanreBook();
             default:
                 echo 'this method not implemented';
         }
@@ -74,7 +76,7 @@ class Handler
             case '/updateuser':
                 return $this->user->updateUser();
             case '/updatebook':
-                return $this->userbook->updateBook();
+                return $this->book->updateBook();
             default:
                 echo 'this method not implemented';
         }

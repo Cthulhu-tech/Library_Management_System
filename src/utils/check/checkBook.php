@@ -4,8 +4,7 @@ require_once __DIR__ . '/../database/db.php';
 
 class BookCheck extends Database
 {
-    private $endDate = '';
-    private $startDate = '';
+    private $bookId = '';
     private $bookDateCreated = '';
     private $bookName = '';
     private $bookCreator = '';
@@ -18,7 +17,43 @@ class BookCheck extends Database
         parent::__construct();
     }
 
-    public function checkBookAll()
+    public function checkBookUpdate()
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        if (!isset($data['id']) && !isset($data['book'], $data['ganre'], $data['years'], $data['count'], $data['creator'])) {
+
+            return false;
+        }
+
+        if (isset($data['id'])) {
+            $this->bookId = $data['id'];
+        }
+
+        if (isset($data['book'])) {
+            $this->bookName = $data['book'];
+        }
+
+        if (isset($data['ganre'])) {
+            $this->bookGanre = $data['ganre'];
+        }
+
+        if (isset($data['years'])) {
+            $this->bookDateCreated = $data['years'];
+        }
+
+        if (isset($data['count'])) {
+            $this->bookCount = $data['count'];
+        }
+
+        if (isset($data['creator'])) {
+            $this->bookCreator = $data['creator'];
+        }
+
+        return true;
+    }
+
+    public function checkBookAll(bool $check)
     {
 
         $data = json_decode(file_get_contents('php://input'), true);
@@ -35,6 +70,17 @@ class BookCheck extends Database
             $this->bookCount = $data['count'];
             $this->bookCreator = $data['creator'];
             $this->bookDateCreated = $data['years'];
+
+            if ($check && !isset($data['id']) || !is_int($data['id'])) {
+
+                return false;
+            }
+
+            if ($check && isset($data['id']) || is_int($data['id'])) {
+
+                $this->bookId = $data['id'];
+                return true;
+            }
 
             return true;
         }
@@ -94,7 +140,11 @@ class BookCheck extends Database
 
     public function getDateCreated()
     {
-
         return $this->bookDateCreated;
+    }
+
+    public function getId()
+    {
+        return $this->bookId;
     }
 }
