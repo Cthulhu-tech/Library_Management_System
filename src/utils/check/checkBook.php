@@ -4,7 +4,7 @@ require_once __DIR__ . '/../database/db.php';
 
 class BookCheck extends Database
 {
-    private $bookId = '';
+    private $bookId = 0;
     private $bookDateCreated = '';
     private $bookName = '';
     private $bookCreator = '';
