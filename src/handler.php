@@ -40,11 +40,11 @@ class Handler
         switch ($this->url) {
 
             case '/allusers':
-                return $this->user->getUsers();
+                return $this->user->getUsers(); // end
             case '/getbook':
-                return $this->book->getBook();
+                return $this->book->getBook(); // end
             case '/getganre':
-                return $this->book->getGanre();
+                return $this->book->getGanre(); // end
             case '/getganrebook':
                 return $this->book->getGanreBook();
             default:
@@ -58,11 +58,11 @@ class Handler
         switch ($this->url) {
 
             case '/user':
-                return $this->user->getUser();
+                return $this->user->getUser(); // end
             case '/setuser':
-                return $this->user->setUser();
+                return $this->user->setUser(); // end
             case '/setbook':
-                return $this->book->setBook();
+                return $this->book->setBook(); // end
             default:
                 echo 'this method not implemented';
         }
@@ -74,9 +74,9 @@ class Handler
         switch ($this->url) {
 
             case '/updateuser':
-                return $this->user->updateUser();
+                return $this->user->updateUser(); // end
             case '/updatebook':
-                return $this->book->updateBook();
+                return $this->book->updateBook(); // end
             default:
                 echo 'this method not implemented';
         }
@@ -88,7 +88,7 @@ class Handler
         switch ($this->url) {
 
             case '/deleteuser':
-                return $this->user->deleteUser();
+                return $this->user->deleteUser(); // end
             case '/deletebook':
                 return $this->book->deleteBook();
             default:
