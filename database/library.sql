@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost:3306
--- Время создания: Сен 05 2022 г., 00:12
+-- Время создания: Сен 05 2022 г., 00:46
 -- Версия сервера: 8.0.30-0ubuntu0.20.04.2
 -- Версия PHP: 7.4.3
 
@@ -135,6 +135,37 @@ ELSE
 	RETURN 0;
 END IF;
 
+END$$
+
+CREATE DEFINER=`thrackerzod`@`localhost` FUNCTION `sp_delete_book` (`id_value` INT(11)) RETURNS INT NO SQL
+BEGIN
+    SET @BOOK_ID = (SELECT case WHEN COUNT(books.id) = 1
+        THEN 'FIND'
+        ELSE 'NOTFOUND'
+    END BOOK_ID
+        FROM `books`
+    WHERE
+        `books`.`id` = `id_value`);
+        
+   	IF(@BOOK_ID = 'FIND') THEN
+    	
+        DELETE FROM `years_books` 
+        WHERE `years_books`.`book_id` = `id_value`;
+        
+        DELETE FROM `book_in_ganre` 
+        WHERE `book_in_ganre`.`book_id` = `id_value`;
+        
+        DELETE FROM `book_count` 
+        WHERE `book_count`.`book_id` = `id_value`;
+        
+        DELETE FROM `books` 
+        WHERE `books`.`id` = `id_value`;
+        
+    	RETURN 1;
+        
+    END IF;
+    
+    RETURN 0;
 END$$
 
 CREATE DEFINER=`thrackerzod`@`localhost` FUNCTION `sp_delete_user` (`id_value` INT(11), `name_value` CHAR(55), `surname_value` CHAR(55), `first_value` INT(11), `last_value` INT(11)) RETURNS INT NO SQL
@@ -334,18 +365,6 @@ CREATE TABLE `books` (
   `book_creator` char(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Дамп данных таблицы `books`
---
-
-INSERT INTO `books` (`id`, `book_name`, `book_creator`) VALUES
-(21, 'тень над исмутом', 'Г.Ф.Ловкрафт'),
-(24, 'тень над исмутом d', 'Г.Ф.Ловкрафт'),
-(26, 'тень над исмутом', 'Г.Ф.Ловкрафтs'),
-(27, 'тень над исмутом f', 'Г.Ф.Ловкрафт'),
-(28, 'тень над исмутом', 'Г.Ф.Ловкрафтa ff'),
-(29, '6', '1234');
-
 -- --------------------------------------------------------
 
 --
@@ -356,17 +375,6 @@ CREATE TABLE `book_count` (
   `book_id` int NOT NULL,
   `count` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Дамп данных таблицы `book_count`
---
-
-INSERT INTO `book_count` (`book_id`, `count`) VALUES
-(21, 3),
-(24, 3),
-(27, 3),
-(28, 3),
-(29, 5);
 
 -- --------------------------------------------------------
 
@@ -379,17 +387,6 @@ CREATE TABLE `book_in_ganre` (
   `ganre_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Дамп данных таблицы `book_in_ganre`
---
-
-INSERT INTO `book_in_ganre` (`book_id`, `ganre_id`) VALUES
-(21, 19),
-(24, 19),
-(27, 19),
-(28, 19),
-(29, 20);
-
 -- --------------------------------------------------------
 
 --
@@ -400,14 +397,6 @@ CREATE TABLE `ganre` (
   `id` int NOT NULL,
   `ganre` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Дамп данных таблицы `ganre`
---
-
-INSERT INTO `ganre` (`id`, `ganre`) VALUES
-(19, 'хоррор'),
-(20, 'user');
 
 -- --------------------------------------------------------
 
@@ -462,14 +451,6 @@ CREATE TABLE `years` (
   `year_of_issue` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Дамп данных таблицы `years`
---
-
-INSERT INTO `years` (`id`, `year_of_issue`) VALUES
-(3, 1917),
-(4, 1997);
-
 -- --------------------------------------------------------
 
 --
@@ -480,17 +461,6 @@ CREATE TABLE `years_books` (
   `book_id` int NOT NULL,
   `years_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Дамп данных таблицы `years_books`
---
-
-INSERT INTO `years_books` (`book_id`, `years_id`) VALUES
-(21, 3),
-(24, 3),
-(27, 3),
-(28, 3),
-(29, 4);
 
 --
 -- Индексы сохранённых таблиц
@@ -580,7 +550,7 @@ ALTER TABLE `books`
 -- AUTO_INCREMENT для таблицы `ganre`
 --
 ALTER TABLE `ganre`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT для таблицы `user_library`
@@ -592,7 +562,7 @@ ALTER TABLE `user_library`
 -- AUTO_INCREMENT для таблицы `years`
 --
 ALTER TABLE `years`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
