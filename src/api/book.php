@@ -19,8 +19,6 @@ class Book extends Database
 
         if (!$protected) {
 
-            echo $this->messageResponse(400, 'all fields are required');
-
             return false;
         }
 
@@ -36,13 +34,12 @@ class Book extends Database
 
         print_r($row);
     }
+    
     public function setBook()
     {
         $protected = $this->checkBook->checkBookAll(false);
 
         if (!$protected) {
-
-            echo $this->messageResponse(400, 'all fields are required');
 
             return false;
         }
@@ -66,14 +63,13 @@ class Book extends Database
 
         echo $this->messageResponse(201, 'book added successfully');
     }
+
     public function updateBook()
     {
 
         $protected = $this->checkBook->checkBookAll(true);
 
         if (!$protected) {
-
-            echo $this->messageResponse(400, 'all fields are required');
 
             return false;
         }
@@ -97,12 +93,40 @@ class Book extends Database
 
         echo $this->messageResponse(200, 'book update successfully');
     }
+
     public function deleteBook()
     {
+        $protected = $this->checkBook->checkBookId();
+
+        if (!$protected) {
+
+            return false;
+        }
+
+        $this->createDatabase();
+
+        $this->result = $this->getDB()->prepare("SELECT `sp_delete_book`(?) AS `status`");
+
+        $this->result->execute(array($this->checkBook->getId()));
+
+        $status = json_encode($this->result->fetchAll(PDO::FETCH_ASSOC)[0]['status'], JSON_UNESCAPED_UNICODE);
+
+        $this->closeConnection();
+
+        if (+$status === 0) {
+
+            echo $this->messageResponse(400, 'book cannot be delete. This book is not found.');
+
+            return false;
+        }
+
+        echo $this->messageResponse(200, 'book delete successfully');
     }
+    
     public function getGanreBook()
     {
     }
+    
     public function getGanre()
     {
 

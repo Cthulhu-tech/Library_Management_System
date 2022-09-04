@@ -17,11 +17,29 @@ class BookCheck extends Database
         parent::__construct();
     }
 
+    public function checkBookId()
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        if (!isset($data['id'])) {
+
+            echo $this->messageResponse(400, 'all fields are required');
+
+            return false;
+        }
+
+        $this->bookId = $data['id'];
+
+        return true;
+    }
+
     public function checkBookUpdate()
     {
         $data = json_decode(file_get_contents('php://input'), true);
 
         if (!isset($data['id']) && !isset($data['book'], $data['ganre'], $data['years'], $data['count'], $data['creator'])) {
+
+            echo $this->messageResponse(400, 'all fields are required');
 
             return false;
         }
@@ -62,6 +80,8 @@ class BookCheck extends Database
 
             if (!is_int($data['years']) || !is_int($data['count'])) {
 
+                echo $this->messageResponse(400, 'all fields are required');
+
                 return false;
             }
 
@@ -73,17 +93,22 @@ class BookCheck extends Database
 
             if ($check && !isset($data['id']) || !is_int($data['id'])) {
 
+                echo $this->messageResponse(400, 'all fields are required');
+
                 return false;
             }
 
             if ($check && isset($data['id']) || is_int($data['id'])) {
 
                 $this->bookId = $data['id'];
+
                 return true;
             }
 
             return true;
         }
+
+        echo $this->messageResponse(400, 'all fields are required');
 
         return false;
     }
@@ -98,6 +123,8 @@ class BookCheck extends Database
             return true;
         }
 
+        echo $this->messageResponse(400, 'all fields are required');
+
         return false;
     }
 
@@ -110,6 +137,8 @@ class BookCheck extends Database
 
             return true;
         }
+
+        echo $this->messageResponse(400, 'all fields are required');
 
         return false;
     }

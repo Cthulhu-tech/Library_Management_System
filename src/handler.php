@@ -90,7 +90,7 @@ class Handler
             case '/deleteuser':
                 return $this->user->deleteUser(); // end
             case '/deletebook':
-                return $this->book->deleteBook();
+                return $this->book->deleteBook(); // end
             default:
                 echo 'this method not implemented';
         }
