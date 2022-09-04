@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost:3306
--- Время создания: Сен 04 2022 г., 19:46
+-- Время создания: Сен 05 2022 г., 00:12
 -- Версия сервера: 8.0.30-0ubuntu0.20.04.2
 -- Версия PHP: 7.4.3
 
@@ -170,26 +170,109 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`thrackerzod`@`localhost` FUNCTION `sp_update_book` (`book_value` CHAR(255), `ganre_value` INT(255), `years_value` INT(11), `count_value` INT(11), `creator_value` CHAR(255), `id_value` INT(11)) RETURNS INT NO SQL
+CREATE DEFINER=`thrackerzod`@`localhost` FUNCTION `sp_update_book` (`book_value` CHAR(255), `ganre_value` CHAR(255), `years_value` INT(11), `count_value` INT(11), `creator_value` CHAR(255), `id_value` INT(11)) RETURNS INT NO SQL
 BEGIN
 
 SET @BOOK_ID = (SELECT case WHEN COUNT(books.id) = 1
     THEN 'FIND'
     ELSE 'NOTFOUND'
-END BOOK_NAME
+END BOOK_ID
     FROM `books`
 WHERE
-    `books`.`id` = `id_value`           
-                AND
-    `books`.`book_name` = `book_value`
-                AND
-    `books`.`book_creator` = `creator_value`);
+    `books`.`id` = `id_value`);
 
 IF (@BOOK_NAME = 'NOTFOUND') THEN
 	RETURN 0;
 ELSE
 
+    IF((LENGTH(`book_value`)) > 1) THEN
+    	UPDATE books
+        SET books.book_name = `book_value`
+        WHERE books.id = `id_value`;
+    END IF;
+
+    IF((LENGTH(`creator_value`)) > 1) THEN
+		UPDATE books
+        SET books.book_creator = `creator_value`
+        WHERE books.id = `id_value`;
+    END IF;
+
+    IF((LENGTH(`ganre_value`)) > 1) THEN
+    
+        SET @GANRE_FIND = (SELECT case WHEN COUNT(ganre.id) = 1
+            THEN 'FIND'
+            ELSE 'NOTFOUND'
+        END GANRE_FIND
+            FROM `ganre`
+            WHERE
+            ganre.ganre = `ganre_value`);
+        
+    
+        IF(@GANRE_FIND = 'FIND') THEN
+        
+            SET @GANRE_ID = (SELECT `id` 
+                FROM `ganre`
+                WHERE `ganre`.`ganre` = `ganre_value`);
+
+            UPDATE `book_in_ganre`
+            SET `ganre_id` = @GANRE_ID
+            WHERE `book_in_ganre`.`book_id` = `id_value`;
+
+        ELSE
+        
+        	INSERT INTO `ganre` (`ganre`) 
+            VALUES (`ganre_value`);
+            
+            UPDATE book_in_ganre
+            SET `ganre_id` = (SELECT LAST_INSERT_ID())
+            WHERE `book_in_ganre`.`book_id` = `id_value`;
+            
+        END IF;  
+
+    END IF;
+
+    IF(`years_value` > 0) THEN
+        
+        SET @YEARS_FIND = (SELECT case WHEN COUNT(years.id) = 1
+            THEN 'FIND'
+            ELSE 'NOTFOUND'
+        END YEARS_FIND
+            FROM `years`
+            WHERE
+            `years`.`year_of_issue` = `years_value`);
+        
+    
+        IF(@YEARS_FIND = 'FIND') THEN
+        
+            SET @YEARS_ID = (SELECT `id` 
+                FROM `years`
+                WHERE `years`.`year_of_issue` = `years_value`);
+
+            UPDATE `years_books`
+            SET `years_books`.`years_id` = @YEARS_ID
+            WHERE `years_books`.`book_id` = `id_value`;
+
+        ELSE
+        
+        	INSERT INTO years (`year_of_issue`) 
+            VALUES (`years_value`);
+            
+            UPDATE `years_books`
+            SET `years_books`.`years_id` = (SELECT LAST_INSERT_ID())
+            WHERE `years_books`.`book_id` = `id_value`;
+            
+        END IF;  
+
+    END IF;
+    
+    IF(`count_value` > 0) THEN
+		UPDATE book_count
+        SET book_count.count = `count_value`
+        WHERE book_count.book_id = `id_value`;
+    END IF;
+    
 	RETURN 1;
+    
 END IF;
 
 END$$
