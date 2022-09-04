@@ -14,14 +14,65 @@ class Book extends Database
 
     public function getBook()
     {
+
+        $protected = $this->checkBook->checkBook();
+
+        if (!$protected) {
+
+            echo $this->messageResponse(400, 'all fields are required');
+
+            return false;
+        }
+
+        $this->createDatabase();
+
+        $this->result = $this->getDB()->prepare("SELECT * FROM books WHERE book_name LIKE ? LIMIT 10");
+
+        $this->result->execute(array($this->checkBook->getBook() . "%"));
+
+        $row = json_encode($this->result->fetchAll(PDO::FETCH_ASSOC), JSON_UNESCAPED_UNICODE);
+
+        $this->closeConnection();
+
+        print_r($row);
     }
     public function setBook()
     {
+        $protected = $this->checkBook->checkBookAll();
+
+        if (!$protected) {
+
+            echo $this->messageResponse(400, 'all fields are required');
+
+            return false;
+        }
+
+        $this->createDatabase();
+
+        $this->result = $this->getDB()->prepare(" SELECT `sp_book_add`(?, ?, ?, ?, ?) AS `status`");
+
+        $this->result->execute(array($this->checkBook->getName(), $this->checkBook->getGanre(), $this->checkBook->getDateCreated(), $this->checkBook->getCount(), $this->checkBook->getCreator()));
+
+        $status = json_encode($this->result->fetchAll(PDO::FETCH_ASSOC)[0]['status'], JSON_UNESCAPED_UNICODE);
+
+        $this->closeConnection();
+
+        if (+$status === 0) {
+
+            echo $this->messageResponse(400, 'book cannot be added. The book already exists');
+
+            return false;
+        }
+
+        echo $this->messageResponse(201, 'book added successfully');
     }
     public function updateBook()
     {
     }
     public function deleteBook()
+    {
+    }
+    public function getGanreBook()
     {
     }
     public function getGanre()
