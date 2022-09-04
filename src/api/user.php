@@ -27,17 +27,23 @@ class User extends Database
         }
 
         $limit = $this->checkUser->getThisLimit();
-        $offset = $this->ckeckcheckUser->getThisOffset();
+        $offset = $this->checkUser->getThisOffset();
+        $max = $this->checkUser->getThisMaxUser();
 
         $this->createDatabase();
 
-        $this->result = $this->getDB()->prepare("SELECT * FROM user_library WHERE LIMIT ? , ?");
-
-        $this->result->execute(array($offset,  $limit));
-
-        $row = json_encode($this->result->fetchAll(PDO::FETCH_ASSOC), JSON_UNESCAPED_UNICODE);
+        $this->result = $this->getDB()->prepare("SELECT * FROM user_library LIMIT :offset , :limit");
+        $this->result->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $this->result->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $this->result->execute();
+        
+        $row['users'] = $this->result->fetchAll(PDO::FETCH_ASSOC);
 
         $this->closeConnection();
+
+        $row['max'] = $max;
+
+        $row = json_encode($row, JSON_UNESCAPED_UNICODE);
 
         print_r($row);
     }

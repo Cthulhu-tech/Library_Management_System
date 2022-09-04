@@ -5,6 +5,7 @@ require_once __DIR__ . '/../database/db.php';
 class UserCheck extends Database
 {
 
+    private $maxuser = 0;
     private $id = '';
     private $limit = '';
     private $offset = '';
@@ -47,12 +48,7 @@ class UserCheck extends Database
                 return false;
             }
 
-            if ($this->offset > $limitUser) {
-
-                echo $this->messageResponse(400, 'exceeding the offset. max offset = ' . $limitUser);
-
-                return false;
-            }
+            $this->maxuser = $limitUser;
 
             if ($this->limit > 50) {
 
@@ -62,6 +58,11 @@ class UserCheck extends Database
             if ($this->limit < 0) {
 
                 $this->limit = 10;
+            }
+
+            if ($this->offset < 0 || $this->offset >= $this->maxuser) {
+
+                $this->offset = 0;
             }
 
             $this->closeConnection();
@@ -117,45 +118,43 @@ class UserCheck extends Database
         return true;
     }
 
+    public function getThisMaxUser()
+    {
+        return $this->maxuser;
+    }
+
     public function getThisId()
     {
-
         return $this->id;
     }
 
     public function getThisLimit()
     {
-
         return $this->limit;
     }
 
     public function getThisOffset()
     {
-
         return $this->offset;
     }
 
     public function getThisName()
     {
-
         return $this->name;
     }
 
     public function getThisSurName()
     {
-
         return $this->surname;
     }
 
     public function getThisPasswordFirst()
     {
-
         return $this->passport_first;
     }
 
     public function getThisPasswordLast()
     {
-
         return $this->passport_last;
     }
 }
