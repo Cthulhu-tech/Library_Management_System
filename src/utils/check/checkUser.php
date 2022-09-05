@@ -21,7 +21,7 @@ class UserCheck extends Database implements IUserCheck
         parent::__construct();
     }
 
-    public function checkParams()
+    public function checkParams(): bool
     {
 
         if (isset($_GET['limit'], $_GET['offset'])) {
@@ -76,7 +76,7 @@ class UserCheck extends Database implements IUserCheck
         return false;
     }
 
-    public function userCheckAllParameters(bool $check)
+    public function userCheckAllParameters(bool $check): bool
     {
         $data = json_decode(file_get_contents('php://input'), true);
 
@@ -99,7 +99,7 @@ class UserCheck extends Database implements IUserCheck
         return true;
     }
 
-    public function userUpdate()
+    public function userUpdate(): bool
     {
         $data = json_decode(file_get_contents('php://input'), true);
 
@@ -119,42 +119,42 @@ class UserCheck extends Database implements IUserCheck
         return true;
     }
 
-    public function getThisMaxUser()
+    public function getThisMaxUser(): int
     {
         return $this->maxuser;
     }
 
-    public function getThisId()
+    public function getThisId(): int
     {
         return $this->id;
     }
 
-    public function getThisLimit()
+    public function getThisLimit(): int
     {
         return $this->limit;
     }
 
-    public function getThisOffset()
+    public function getThisOffset(): int
     {
         return $this->offset;
     }
 
-    public function getThisName()
+    public function getThisName(): string
     {
         return $this->name;
     }
 
-    public function getThisSurName()
+    public function getThisSurName(): string
     {
         return $this->surname;
     }
 
-    public function getThisPasswordFirst()
+    public function getThisPasswordFirst(): int
     {
         return $this->passport_first;
     }
 
-    public function getThisPasswordLast()
+    public function getThisPasswordLast(): int
     {
         return $this->passport_last;
     }

@@ -31,7 +31,7 @@ class Database implements IDatabase
         $this->password = $_ENV['PASSWORD'];
     }
 
-    public function createDatabase()
+    public function createDatabase(): void
     {
         try {
 
@@ -42,25 +42,25 @@ class Database implements IDatabase
         }
     }
 
-    public function getDB()
+    public function getDB(): PDO
     {
 
         return $this->db;
     }
 
-    public function closeConnection()
+    public function closeConnection(): void
     {
 
         $this->db = null;
     }
 
-    public function hashPassword(string $password)
+    public function hashPassword(string $password): string
     {
 
         return password_hash($password, PASSWORD_BCRYPT, $this->options);
     }
 
-    public function messageResponse(int $code = 200, string $message = "Ok")
+    public function messageResponse(int $code = 200, string $message = "Ok"): void
     {
 
         http_response_code($code);

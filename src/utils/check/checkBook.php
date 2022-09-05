@@ -18,7 +18,7 @@ class BookCheck extends Database implements IBookCheck
         parent::__construct();
     }
 
-    public function checkBookId()
+    public function checkBookId(): bool
     {
         $data = json_decode(file_get_contents('php://input'), true);
 
@@ -34,7 +34,7 @@ class BookCheck extends Database implements IBookCheck
         return true;
     }
 
-    public function checkBookUpdate()
+    public function checkBookUpdate(): bool
     {
         $data = json_decode(file_get_contents('php://input'), true);
 
@@ -72,7 +72,7 @@ class BookCheck extends Database implements IBookCheck
         return true;
     }
 
-    public function checkBookAll(bool $check)
+    public function checkBookAll(bool $check): bool
     {
 
         $data = json_decode(file_get_contents('php://input'), true);
@@ -114,7 +114,7 @@ class BookCheck extends Database implements IBookCheck
         return false;
     }
 
-    public function checkBook()
+    public function checkBook(): bool
     {
 
         if (isset($_GET['book'])) {
@@ -129,7 +129,7 @@ class BookCheck extends Database implements IBookCheck
         return false;
     }
 
-    public function checkGanre()
+    public function checkGanre(): bool
     {
 
         if (isset($_GET['ganre'])) {
@@ -144,36 +144,36 @@ class BookCheck extends Database implements IBookCheck
         return false;
     }
 
-    public function getGanre()
+    public function getGanre(): string
     {
 
         return $this->bookGanre;
     }
 
-    public function getName()
+    public function getName(): string
     {
 
         return $this->bookName;
     }
 
-    public function getCount()
+    public function getCount(): int
     {
 
         return $this->bookCount;
     }
 
-    public function getCreator()
+    public function getCreator(): string
     {
 
         return $this->bookCreator;
     }
 
-    public function getDateCreated()
+    public function getDateCreated(): int
     {
         return $this->bookDateCreated;
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->bookId;
     }

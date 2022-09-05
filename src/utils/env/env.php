@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../interface/interface.php';
 
 class Env implements IEnv
 {
-    public function getEnv()
+    public function getEnv(): void
     {
 
         $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../../');
