@@ -56,3 +56,27 @@ interface IHandler
     function __construct();
     function handleMethod(): void;
 }
+
+interface IMiddleware
+{
+    function fn($callback);
+    function handler($callback);
+}
+
+interface IJwt
+{
+    function checkUser($next);
+    function checkAdmin($next);
+}
+
+interface IJWThandler
+{
+    function getType();
+    function getBearerToken();
+    function getCookie(string $name);
+    function checkToken(string $token);
+    function setAccessToken(string $token);
+    function setRefreshToken(string $token);
+    function setCookie(string $name, string $value, int $duration);
+    function createJWT(int $duration, string $login, string $type, int $id);
+}
