@@ -4,8 +4,11 @@ require_once __DIR__ . '/../interface/interface.php';
 
 class Middleware implements IMiddleware
 {
+    private $check = true;
+    private $count = 0;
+
     private $fn;
-    private $nextValue = false;
+    private $nextValue = array();
 
     public function fn($callback)
     {
@@ -22,19 +25,31 @@ class Middleware implements IMiddleware
     public function handler($callback)
     {
 
-        $this->nextValue = false;
+        array_push($this->nextValue, false);
+
+        $this->count = is_array($this->nextValue) ? count($this->nextValue) : 0;
 
         if (is_callable($callback)) {
 
             $callback(function () {
 
-                $this->nextValue = true;
+                $this->nextValue[$this->count - 1] = true;
             });
         } else {
             throw new Exception('Invalid function');
         }
 
-        if ($this->nextValue) {
+        for ($i = 0; $i <= $this->count; $i++) {
+
+            if ($this->nextValue[$this->count] === null) {
+
+                $this->check = false;
+
+                break;
+            }
+        }
+
+        if ($this->check) {
 
             return call_user_func($this->fn);
         }
