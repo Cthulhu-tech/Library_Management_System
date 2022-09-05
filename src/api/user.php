@@ -36,7 +36,7 @@ class User extends Database
         $this->result->bindParam(':limit', $limit, PDO::PARAM_INT);
         $this->result->bindParam(':offset', $offset, PDO::PARAM_INT);
         $this->result->execute();
-        
+
         $row['users'] = $this->result->fetchAll(PDO::FETCH_ASSOC);
 
         $this->closeConnection();
@@ -83,7 +83,7 @@ class User extends Database
 
         $this->createDatabase();
 
-        $this->result = $this->getDB()->prepare(" SELECT `sp_check_user_add`(?, ?, ?, ?) AS `status`");
+        $this->result = $this->getDB()->prepare("SELECT `sp_check_user_add`(?, ?, ?, ?) AS `status`");
 
         $this->result->execute(array($this->checkUser->getThisName(), $this->checkUser->getThisSurName(), $this->checkUser->getThisPasswordLast(), $this->checkUser->getThisPasswordFirst()));
 

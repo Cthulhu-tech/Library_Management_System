@@ -4,7 +4,7 @@ require './src/interface/interface.php';
 require './src/utils/env/env.php';
 require './src/handler.php';
 
-class Project implements Main
+class Project implements IMain
 {
     private $env;
     private $handler;

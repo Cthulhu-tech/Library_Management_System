@@ -2,34 +2,42 @@
 
 require __DIR__ . '/api/user.php';
 require __DIR__ . '/api/book.php';
-require_once __DIR__ . '/../../interface/interface.php';
+require __DIR__ . '/middleware/middleware.php';
+require_once __DIR__ . '/interface/interface.php';
+require_once __DIR__ . '/middleware/handler/jwt.php';
 
-class Handler implements IHandler
+class Handler extends Middleware implements IHandler
 {
     private $book;
     private $user;
     private $url;
+    private $jwt;
 
     function __construct()
     {
         header('Content-Type: application/json');
         $this->user = new User();
         $this->book = new Book();
+        $this->jwt = new JWTmiddleware();
     }
 
-    public function handleMethod()
+    public function handleMethod(): void
     {
         $this->url = strtok($_SERVER["REQUEST_URI"], '?');
 
         switch ($_SERVER['REQUEST_METHOD']) {
             case 'GET':
-                return $this->get();
+                $this->get();
+                break;
             case 'POST':
-                return $this->post();
+                $this->post();
+                break;
             case 'PUT':
-                return $this->put();
+                $this->put();
+                break;
             case 'DELETE':
-                return $this->delete();
+                $this->fn(array($this, 'delete'))->handler(array($this->jwt, 'checkAdmin'));
+                break;
             default:
                 echo 'this method not implemented';
         }
@@ -41,13 +49,13 @@ class Handler implements IHandler
         switch ($this->url) {
 
             case '/allusers':
-                return $this->user->getUsers(); // end
+                return $this->fn(array($this->user, 'getUsers'))->handler(array($this->jwt, 'checkAdmin')); // end
             case '/getbook':
                 return $this->book->getBook(); // end
             case '/getganre':
-                return $this->book->getGanre(); // end
+                return $this->book->getGanre(); //end 
             case '/getganrebook':
-                return $this->book->getGanreBook();
+                return $this->book->getGanreBook(); //end
             default:
                 echo 'this method not implemented';
         }
@@ -59,11 +67,11 @@ class Handler implements IHandler
         switch ($this->url) {
 
             case '/user':
-                return $this->user->getUser(); // end
+                return $this->fn(array($this->user, 'getUser'))->handler(array($this->jwt, 'checkAdmin')); // end
             case '/setuser':
-                return $this->user->setUser(); // end
+                return $this->fn(array($this->user, 'setUser'))->handler(array($this->jwt, 'checkAdmin')); // end
             case '/setbook':
-                return $this->book->setBook(); // end
+                return $this->fn(array($this->book, 'setBook'))->handler(array($this->jwt, 'checkAdmin')); // end
             default:
                 echo 'this method not implemented';
         }
@@ -75,9 +83,9 @@ class Handler implements IHandler
         switch ($this->url) {
 
             case '/updateuser':
-                return $this->user->updateUser(); // end
+                return $this->fn(array($this->user, 'updateUser'))->handler(array($this->jwt, 'checkAdmin')); // end
             case '/updatebook':
-                return $this->book->updateBook(); // end
+                return $this->fn(array($this->book, 'updateBook'))->handler(array($this->jwt, 'checkAdmin')); // end
             default:
                 echo 'this method not implemented';
         }
