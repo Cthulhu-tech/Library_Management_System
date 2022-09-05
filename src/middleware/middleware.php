@@ -25,23 +25,28 @@ class Middleware implements IMiddleware
     public function handler($callback)
     {
 
-        array_push($this->nextValue, false);
+        if (is_array($callback[0])) {
 
-        $this->count = is_array($this->nextValue) ? count($this->nextValue) : 0;
+            for ($i = 0; $i < count($callback); $i++) {
 
-        if (is_callable($callback)) {
+                $this->set($callback[$i]);
+            }
 
-            $callback(function () {
-
-                $this->nextValue[$this->count - 1] = true;
-            });
-        } else {
-            throw new Exception('Invalid function');
+            $this->end();
+            return $this;
         }
 
-        for ($i = 0; $i <= $this->count; $i++) {
+        $this->set($callback);
+        $this->end();
+        return $this;
+    }
 
-            if ($this->nextValue[$this->count] === null) {
+    private function end()
+    {
+
+        for ($i = 0; $i < $this->count; $i++) {
+
+            if ($this->nextValue[$i] === false) {
 
                 $this->check = false;
 
@@ -51,9 +56,26 @@ class Middleware implements IMiddleware
 
         if ($this->check) {
 
-            return call_user_func($this->fn);
+            call_user_func($this->fn);
         }
+    }
 
-        return $this;
+    private function set($func)
+    {
+        array_push($this->nextValue, false);
+
+        $this->count = count($this->nextValue);
+
+        if (is_callable($func)) {
+
+            $func(function () {
+
+                $resolve = $this->count - 1;
+
+                $this->nextValue[$resolve] = true;
+            });
+        } else {
+            throw new Exception('Invalid function');
+        }
     }
 }

@@ -36,7 +36,7 @@ class Handler extends Middleware implements IHandler
                 $this->put();
                 break;
             case 'DELETE':
-                $this->fn(array($this, 'delete'))->handler(array($this->jwt, 'checkAdmin'));
+                $this->fn([$this, 'delete'])->handler([$this->jwt, 'checkAdmin']);
                 break;
             default:
                 echo 'this method not implemented';
@@ -49,7 +49,7 @@ class Handler extends Middleware implements IHandler
         switch ($this->url) {
 
             case '/allusers':
-                return $this->fn(array($this->user, 'getUsers'))->handler(array($this->jwt, 'checkAdmin')); // end
+                return $this->fn([$this->user, 'getUsers'])->handler([$this->jwt, 'checkAdmin']); // end
             case '/getbook':
                 return $this->book->getBook(); // end
             case '/getganre':
@@ -67,11 +67,11 @@ class Handler extends Middleware implements IHandler
         switch ($this->url) {
 
             case '/user':
-                return $this->fn(array($this->user, 'getUser'))->handler(array($this->jwt, 'checkAdmin')); // end
+                return $this->fn([$this->user, 'getUser'])->handler([$this->jwt, 'checkAdmin']); // end
             case '/setuser':
-                return $this->fn(array($this->user, 'setUser'))->handler(array($this->jwt, 'checkAdmin')); // end
+                return $this->fn([$this->user, 'setUser'])->handler([$this->jwt, 'checkAdmin']); // end
             case '/setbook':
-                return $this->fn(array($this->book, 'setBook'))->handler(array($this->jwt, 'checkAdmin')); // end
+                return $this->fn([$this->book, 'setBook'])->handler([$this->jwt, 'checkAdmin']); // end
             default:
                 echo 'this method not implemented';
         }
@@ -83,9 +83,9 @@ class Handler extends Middleware implements IHandler
         switch ($this->url) {
 
             case '/updateuser':
-                return $this->fn(array($this->user, 'updateUser'))->handler(array($this->jwt, 'checkAdmin')); // end
+                return $this->fn([$this->user, 'updateUser'])->handler([$this->jwt, 'checkAdmin']); // end
             case '/updatebook':
-                return $this->fn(array($this->book, 'updateBook'))->handler(array($this->jwt, 'checkAdmin')); // end
+                return $this->fn([$this->book, 'updateBook'])->handler([$this->jwt, 'checkAdmin']); // end
             default:
                 echo 'this method not implemented';
         }
