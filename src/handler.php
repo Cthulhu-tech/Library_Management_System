@@ -2,8 +2,9 @@
 
 require __DIR__ . '/api/user.php';
 require __DIR__ . '/api/book.php';
+require_once __DIR__ . '/../../interface/interface.php';
 
-class Handler
+class Handler implements IHandler
 {
     private $book;
     private $user;

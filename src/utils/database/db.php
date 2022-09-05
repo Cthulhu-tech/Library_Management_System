@@ -1,6 +1,8 @@
 <?php
 
-class Database
+require_once __DIR__ . '/../../interface/interface.php';
+
+class Database implements IDatabase
 {
 
     protected $db;
@@ -52,7 +54,7 @@ class Database
         $this->db = null;
     }
 
-    public function hashPassword($password)
+    public function hashPassword(string $password)
     {
 
         return password_hash($password, PASSWORD_BCRYPT, $this->options);

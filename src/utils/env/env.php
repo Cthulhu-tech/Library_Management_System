@@ -1,8 +1,9 @@
 <?php
 
 require "vendor/autoload.php";
+require_once __DIR__ . '/../../interface/interface.php';
 
-class Env
+class Env implements IEnv
 {
     public function getEnv()
     {

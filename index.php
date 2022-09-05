@@ -1,9 +1,10 @@
 <?php
 
+require './src/interface/interface.php';
 require './src/utils/env/env.php';
 require './src/handler.php';
 
-class Project
+class Project implements Main
 {
     private $env;
     private $handler;
@@ -22,7 +23,6 @@ class Project
 
     private function handleUri()
     {
-
         $this->handler = new Handler();
         $this->handler->handleMethod();
     }

@@ -1,8 +1,9 @@
 <?php
 
 require_once __DIR__ . '/../database/db.php';
+require_once __DIR__ . '/../../interface/interface.php';
 
-class BookCheck extends Database
+class BookCheck extends Database implements IBookCheck
 {
     private $bookId = 0;
     private $bookDateCreated = '';

@@ -1,8 +1,9 @@
 <?php
 
 require_once __DIR__ . '/../database/db.php';
+require_once __DIR__ . '/../../interface/interface.php';
 
-class UserCheck extends Database
+class UserCheck extends Database implements IUserCheck
 {
 
     private $maxuser = 0;
