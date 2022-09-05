@@ -7,7 +7,7 @@ class Middleware implements IMiddleware
     private $fn;
     private $nextValue = false;
 
-    public function setCallback($callback)
+    public function fn($callback)
     {
 
         if (is_callable($callback)) {
@@ -19,7 +19,7 @@ class Middleware implements IMiddleware
         return $this;
     }
 
-    public function setMiddleware($callback)
+    public function handler($callback)
     {
 
         $this->nextValue = false;
