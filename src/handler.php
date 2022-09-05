@@ -2,6 +2,7 @@
 
 require __DIR__ . '/api/user.php';
 require __DIR__ . '/api/book.php';
+require __DIR__ . '/api/authorization.php';
 require __DIR__ . '/middleware/middleware.php';
 require_once __DIR__ . '/interface/interface.php';
 require_once __DIR__ . '/middleware/handler/jwt.php';
@@ -10,6 +11,7 @@ class Handler extends Middleware implements IHandler
 {
     private $book;
     private $user;
+    private $auth;
     private $url;
     private $jwt;
 
@@ -19,6 +21,7 @@ class Handler extends Middleware implements IHandler
         $this->user = new User();
         $this->book = new Book();
         $this->jwt = new JWTmiddleware();
+        $this->auth = new Authorization();
     }
 
     public function handleMethod(): void
@@ -72,6 +75,12 @@ class Handler extends Middleware implements IHandler
                 return $this->fn([$this->user, 'setUser'])->handler([$this->jwt, 'checkAdmin']); // end
             case '/setbook':
                 return $this->fn([$this->book, 'setBook'])->handler([$this->jwt, 'checkAdmin']); // end
+            case '/login':
+                return $this->auth->login();
+            case '/refresh':
+                return $this->auth->refresh();
+            case '/registration':
+                return $this->auth->registration();
             default:
                 echo 'this method not implemented';
         }

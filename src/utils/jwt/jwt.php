@@ -1,12 +1,13 @@
 <?php
 
 require 'vendor/autoload.php';
+require_once __DIR__ . '/../../utils/database/db.php';
 require_once __DIR__ . '/../../interface/interface.php';
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-class JWThandler implements IJWThandler
+class JWThandler extends Database implements IJWThandler
 {
     private $key = '';
     private $type = '';
@@ -114,5 +115,17 @@ class JWThandler implements IJWThandler
     public function getType()
     {
         return $this->type;
+    }
+
+    public function login()
+    {
+    }
+
+    public function register()
+    {
+    }
+
+    public function lagout()
+    {
     }
 }

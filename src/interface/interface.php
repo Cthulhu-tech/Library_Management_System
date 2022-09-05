@@ -80,3 +80,10 @@ interface IJWThandler
     function setCookie(string $name, string $value, int $duration);
     function createJWT(int $duration, string $login, string $type, int $id);
 }
+
+interface IAuthorization
+{
+    function login();
+    function refresh();
+    function registration();
+}
