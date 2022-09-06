@@ -9,12 +9,15 @@ use Firebase\JWT\Key;
 
 class JWThandler extends Database implements IJWThandler
 {
+    private $id = 0;
     private $key = '';
     private $type = '';
+    private $login = '';
 
     function __construct()
     {
         $this->key = $_ENV['SECRET_KEY'];
+        parent::__construct();
     }
 
     public function getCookie(string $name)
@@ -45,11 +48,13 @@ class JWThandler extends Database implements IJWThandler
     public function checkToken(string $token)
     {
 
-        $decoded = JWT::decode($token, new Key($this->key, 'HS256'));
+        $decoded = JWT::decode($token, new Key($this->key, "HS256"));
 
-        if (isset($decoded->iat, $decoded->type) && $decoded->iat > time()) {
+        if (isset($decoded->iat, $decoded->type, $decoded->exp) && $decoded->exp > time()) {
 
+            $this->id = $decoded->id;
             $this->type = $decoded->type;
+            $this->login = $decoded->login;
 
             return true;
         }
@@ -57,17 +62,12 @@ class JWThandler extends Database implements IJWThandler
         return false;
     }
 
-    public function setAccessToken(string $token)
+    public function setAccessToken(string $token, $user)
     {
-
-        return true;
+        $this->accestoken($token, $user);
     }
 
-    public function setRefreshToken(string $token)
-    {
-    }
-
-    public function setCookie(string $name, string $value, int $duration)
+    public function setRefreshToken(string $name, string $value, int $duration)
     {
         setcookie($name, $value, time() + $duration, "/", "", "", true);
     }
@@ -79,7 +79,8 @@ class JWThandler extends Database implements IJWThandler
             'id' => $id,
             'type' => $type,
             'login' => $login,
-            'iat' => time() + $duration,
+            'iat' => $duration,
+            "exp" => time() + $duration
         ];
 
 
@@ -117,15 +118,12 @@ class JWThandler extends Database implements IJWThandler
         return $this->type;
     }
 
-    public function login()
+    public function getLogin()
     {
+        return $this->login;
     }
-
-    public function register()
+    public function getId()
     {
-    }
-
-    public function lagout()
-    {
+        return $this->id;
     }
 }
