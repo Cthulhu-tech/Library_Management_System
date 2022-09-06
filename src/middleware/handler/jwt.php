@@ -31,8 +31,12 @@ class JWTmiddleware extends JWThandler implements IJwt
         if ($check && $this->getType() === 'admin') {
 
             $next();
+
+            return true;
         }
 
         echo 'sorry need authorization';
+
+        return false;
     }
 }

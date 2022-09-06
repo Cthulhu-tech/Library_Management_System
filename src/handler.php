@@ -75,12 +75,16 @@ class Handler extends Middleware implements IHandler
                 return $this->fn([$this->user, 'setUser'])->handler([$this->jwt, 'checkAdmin']); // end
             case '/setbook':
                 return $this->fn([$this->book, 'setBook'])->handler([$this->jwt, 'checkAdmin']); // end
-            case '/login':
-                return $this->auth->login();
+            case '/loginuser':
+                return $this->auth->loginUser();
+            case '/loginadmin':
+                return $this->auth->loginAdmin();
             case '/refresh':
                 return $this->auth->refresh();
-            case '/registration':
-                return $this->auth->registration();
+            case '/registrationuser':
+                return $this->auth->registrationUser();
+            case '/registrationadmin':
+                return $this->fn([$this->auth, 'registrationAdmin'])->handler([$this->jwt, 'checkAdmin']); // end
             default:
                 echo 'this method not implemented';
         }
