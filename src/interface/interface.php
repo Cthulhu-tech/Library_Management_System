@@ -75,15 +75,30 @@ interface IJWThandler
     function getBearerToken();
     function getCookie(string $name);
     function checkToken(string $token);
-    function setAccessToken(string $token);
-    function setRefreshToken(string $token);
-    function setCookie(string $name, string $value, int $duration);
+    function setAccessToken(string $token, string $user);
+    function setRefreshToken(string $name, string $value, int $duration);
     function createJWT(int $duration, string $login, string $type, int $id);
 }
 
 interface IAuthorization
 {
-    function login();
     function refresh();
-    function registration();
+    function loginUser();
+    function loginAdmin();
+    function registrationUser();
+    function registrationAdmin();
+}
+
+interface IAuthCheck
+{
+    function check();
+    function getMail();
+    function getName();
+    function getLogin();
+    function getSurname();
+    function getPassword();
+    function checkLoginUser();
+    function getPassportlast();
+    function getPassportfirst();
+    function checkRegistrationUser();
 }
