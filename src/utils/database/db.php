@@ -71,4 +71,17 @@ class Database implements IDatabase
 
         echo json_encode($messageObj);
     }
+
+    protected function accestoken($token, $user)
+    {
+
+        http_response_code(201);
+
+        $messageObj = new stdClass();
+
+        $messageObj->user = $user;
+        $messageObj->access = $token;
+
+        echo json_encode($messageObj);
+    }
 }
