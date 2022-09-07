@@ -7,7 +7,7 @@ require_once __DIR__ . '/../utils/check/checkAuth.php';
 class Authorization extends JWThandler implements IAuthorization
 {
 
-    private $accessDate = 1800;
+    private $accessDate = 900;
     private $refreshDate = 604800;
     private $check;
     private $result;
