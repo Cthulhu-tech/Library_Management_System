@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.5deb2
+-- version 5.1.4deb1+focal1
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost:3306
--- Время создания: Сен 05 2022 г., 00:46
+-- Время создания: Сен 07 2022 г., 04:50
 -- Версия сервера: 8.0.30-0ubuntu0.20.04.2
--- Версия PHP: 7.4.3
+-- Версия PHP: 8.0.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -23,6 +22,17 @@ SET time_zone = "+00:00";
 --
 
 DELIMITER $$
+--
+-- Процедуры
+--
+CREATE DEFINER=`thrackerzod`@`localhost` PROCEDURE `sp_get_user_in_login` (IN `user_email` VARCHAR(255))  NO SQL
+BEGIN
+	
+    SELECT * FROM user_library 
+    WHERE email = user_email;
+    
+END$$
+
 --
 -- Функции
 --
@@ -109,6 +119,31 @@ WHERE
     	RETURN 0;
     END IF;
 
+END$$
+
+CREATE DEFINER=`thrackerzod`@`localhost` FUNCTION `sp_check_admin` (`name_value` CHAR(255), `surname_value` CHAR(255), `password_value` CHAR(255)) RETURNS INT NO SQL
+BEGIN
+SET @ADMIN = (SELECT case WHEN COUNT(administrators.id) = 1
+    THEN 'FIND'
+    ELSE 'NOTFOUND'
+END ADMIN
+    FROM `administrators`
+WHERE
+    `administrators`.`name` = `name_value`
+                 AND
+    `administrators`.`surname` = `surname_value`);
+    
+IF (@ADMIN = 'NOTFOUND') THEN
+
+	INSERT INTO `administrators`
+    (name, surname, password)
+     VALUES
+    (name_value, surname_value, password_value);
+    
+	RETURN 1;
+END IF;
+
+RETURN 0;
 END$$
 
 CREATE DEFINER=`thrackerzod`@`localhost` FUNCTION `sp_check_user_add` (`name_value` CHAR(55), `surname_value` CHAR(55), `first_value` INT(11), `last_value` INT(11)) RETURNS INT NO SQL
@@ -199,6 +234,43 @@ ELSE
 	RETURN 0;
 END IF;
 
+END$$
+
+CREATE DEFINER=`thrackerzod`@`localhost` FUNCTION `sp_find_user` (`passpord_first_value` INT(11), `passpord_last_value` INT(11), `email_value` CHAR(255), `name_value` CHAR(55), `surname_value` CHAR(55), `password_value` CHAR(255)) RETURNS INT NO SQL
+BEGIN
+		
+SET @USER = (SELECT case WHEN COUNT(`user_library`.`id`) = 1
+    THEN 'FIND'
+    ELSE 'NOTFOUND'
+END BOOK_NAME
+    FROM `user_library`
+WHERE
+    `user_library`.`passport_first` = `passpord_first_value`
+                 AND
+    `user_library`.`passport_last` = `passpord_last_value`
+            	 AND
+    `user_library`.email = `email_value`);
+    
+    IF (@USER = 'FIND') THEN
+        RETURN 0;
+    ELSE
+    	INSERT INTO `user_library` 
+        (name, 
+         surname, 
+         passport_first, 
+         passport_last, 
+         password, 
+         email)
+         VALUES
+         (`name_value`, 
+         `surname_value`,
+         `passpord_first_value`,
+         `passpord_last_value`,
+         `password_value`,
+         `email_value`);
+        RETURN 1;
+    END IF;
+    
 END$$
 
 CREATE DEFINER=`thrackerzod`@`localhost` FUNCTION `sp_update_book` (`book_value` CHAR(255), `ganre_value` CHAR(255), `years_value` INT(11), `count_value` INT(11), `creator_value` CHAR(255), `id_value` INT(11)) RETURNS INT NO SQL
@@ -350,8 +422,16 @@ CREATE TABLE `administrators` (
   `id` int NOT NULL,
   `name` char(255) NOT NULL,
   `surname` char(255) NOT NULL,
-  `password` char(255) NOT NULL
+  `password` char(255) NOT NULL,
+  `refresh` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `administrators`
+--
+
+INSERT INTO `administrators` (`id`, `name`, `surname`, `password`, `refresh`) VALUES
+(3, 'Admin', 'Admin', '$2y$06$ZMt1Ffoa8thi2S7tNCkzteP3dxLW3QtXTzbnyfoZ3d5tJOQMXAWZ2', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MywidHlwZSI6ImFkbWluIiwibG9naW4iOiJBZG1pbiIsImlhdCI6NjA0ODAwLCJleHAiOjE2NjMxMDA5MTl9.09Ox5JHuiQKpyoyIkJCr8MaT7arAkzIa8NVYi6rjaEU');
 
 -- --------------------------------------------------------
 
@@ -437,8 +517,18 @@ CREATE TABLE `user_library` (
   `name` char(55) NOT NULL,
   `surname` char(55) NOT NULL,
   `passport_first` int NOT NULL,
-  `passport_last` int NOT NULL
+  `passport_last` int NOT NULL,
+  `password` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `refresh` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `email` char(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `user_library`
+--
+
+INSERT INTO `user_library` (`id`, `name`, `surname`, `passport_first`, `passport_last`, `password`, `refresh`, `email`) VALUES
+(11, 'ivan', 'ivanovich', 1234, 1234, '$2y$06$R4bQ23fPS5J8jaxns4.aPu97f8Tod.ahgGVgUSWIokYJVQ6tS23Di', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTEsInR5cGUiOiJ1c2VyIiwibG9naW4iOiJlbWFpbCIsImlhdCI6MTY2MzA4NzMwOH0.CsLzU1UFQ-vWulphTuDNQYp-NYWoxjBCgGoGh_eYd8s', 'email');
 
 -- --------------------------------------------------------
 
@@ -538,7 +628,7 @@ ALTER TABLE `years_books`
 -- AUTO_INCREMENT для таблицы `administrators`
 --
 ALTER TABLE `administrators`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT для таблицы `books`
@@ -556,7 +646,7 @@ ALTER TABLE `ganre`
 -- AUTO_INCREMENT для таблицы `user_library`
 --
 ALTER TABLE `user_library`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT для таблицы `years`
