@@ -17,7 +17,7 @@ class Handler extends Middleware implements IHandler
 
     function __construct()
     {
-        header('Content-Type: application/json');
+        $this->headers();
         $this->user = new User();
         $this->book = new Book();
         $this->jwt = new JWTmiddleware();
@@ -40,6 +40,9 @@ class Handler extends Middleware implements IHandler
                 break;
             case 'DELETE':
                 $this->fn([$this, 'delete'])->handler([$this->jwt, 'checkAdmin']);
+                break;
+            case 'OPTIONS':
+                $this->options();
                 break;
             default:
                 echo 'this method not implemented';
@@ -116,5 +119,24 @@ class Handler extends Middleware implements IHandler
             default:
                 echo 'this method not implemented';
         }
+    }
+
+    private function options()
+    {
+
+        http_response_code(200);
+
+        return true;
+    }
+
+    private function headers()
+    {
+
+        header("Access-Control-Allow-Origin: http://localhost:8081 ", true);
+        header("Access-Control-Allow-Credentials: true");
+        header("Access-Control-Max-Age: 1000");
+        header('Content-Type: application/json');
+        header("Access-Control-Allow-Headers: Access-Control-Allow-Headers, Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        header("Access-Control-Allow-Methods: PUT, POST, GET, OPTIONS, DELETE");
     }
 }

@@ -111,6 +111,12 @@ class Authorization extends JWThandler implements IAuthorization
     {
         $refresh = $this->getCookie('refresh');
 
+        if ($refresh === 'need cookie') {
+
+            echo $this->messageResponse(403, 'Token not valid');
+            return false;
+        }
+
         $check = $this->checkToken($refresh);
 
         if (!$check) {

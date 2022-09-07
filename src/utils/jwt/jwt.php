@@ -48,15 +48,21 @@ class JWThandler extends Database implements IJWThandler
     public function checkToken(string $token)
     {
 
-        $decoded = JWT::decode($token, new Key($this->key, "HS256"));
+        try {
 
-        if (isset($decoded->iat, $decoded->type, $decoded->exp) && $decoded->exp > time()) {
+            $decoded = JWT::decode($token, new Key($this->key, "HS256"));
 
-            $this->id = $decoded->id;
-            $this->type = $decoded->type;
-            $this->login = $decoded->login;
+            if (isset($decoded->iat, $decoded->type, $decoded->exp) && $decoded->exp > time()) {
 
-            return true;
+                $this->id = $decoded->id;
+                $this->type = $decoded->type;
+                $this->login = $decoded->login;
+
+                return true;
+            }
+        } catch (\Exception $e) {
+
+            return false;
         }
 
         return false;
