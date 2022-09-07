@@ -56,7 +56,7 @@ class Authorization extends JWThandler implements IAuthorization
 
         $this->closeConnection();
 
-        $this->setAccessToken($access, $row['email']);
+        $this->setAccessToken($access, $row['email'], 'user');
         $this->setRefreshToken('refresh', $refresh, 604800);
 
         return true;
@@ -101,7 +101,7 @@ class Authorization extends JWThandler implements IAuthorization
 
         $this->closeConnection();
 
-        $this->setAccessToken($access, $row['name']);
+        $this->setAccessToken($access, $row['name'], 'admin');
         $this->setRefreshToken('refresh', $refresh, $this->refreshDate);
 
         return true;
@@ -153,7 +153,7 @@ class Authorization extends JWThandler implements IAuthorization
             $this->result = $this->getDB()->prepare("UPDATE `administrators` SET `refresh` = ? WHERE id = ?");
             $this->result->execute(array($refresh, +$row['id']));
 
-            $this->setTokens($access, $refresh, $row['name']);
+            $this->setTokens($access, $refresh, $row['name'], 'admin');
         } else {
 
             $access = $this->createJWT($this->accessDate, $row['email'], 'user', +$row['id']);
@@ -162,7 +162,7 @@ class Authorization extends JWThandler implements IAuthorization
             $this->result = $this->getDB()->prepare("UPDATE `user_library` SET `refresh` = ? WHERE id = ?");
             $this->result->execute(array($refresh, +$row['id']));
 
-            $this->setTokens($access, $refresh, $row['email']);
+            $this->setTokens($access, $refresh, $row['email'], 'user');
         }
 
         $this->closeConnection();
@@ -170,9 +170,9 @@ class Authorization extends JWThandler implements IAuthorization
         return true;
     }
 
-    private function setTokens($access, $refresh, $name)
+    private function setTokens($access, $refresh, $name, $type)
     {
-        $this->setAccessToken($access, $name);
+        $this->setAccessToken($access, $name, $type);
         $this->setRefreshToken('refresh', $refresh, $this->refreshDate);
 
         return true;

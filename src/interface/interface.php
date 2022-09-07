@@ -75,7 +75,7 @@ interface IJWThandler
     function getBearerToken();
     function getCookie(string $name);
     function checkToken(string $token);
-    function setAccessToken(string $token, string $user);
+    function setAccessToken(string $token, string $user, string $type);
     function setRefreshToken(string $name, string $value, int $duration);
     function createJWT(int $duration, string $login, string $type, int $id);
 }

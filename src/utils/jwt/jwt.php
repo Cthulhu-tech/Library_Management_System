@@ -68,9 +68,9 @@ class JWThandler extends Database implements IJWThandler
         return false;
     }
 
-    public function setAccessToken(string $token, $user)
+    public function setAccessToken(string $token, $user, $type)
     {
-        $this->accestoken($token, $user);
+        $this->accestoken($token, $user, $type);
     }
 
     public function setRefreshToken(string $name, string $value, int $duration)
