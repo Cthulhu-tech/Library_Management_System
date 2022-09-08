@@ -84,6 +84,8 @@ class Handler extends Middleware implements IHandler
                 return $this->auth->loginAdmin();
             case '/refresh':
                 return $this->auth->refresh();
+            case '/lagout':
+                return $this->auth->lagout();
             case '/registrationuser':
                 return $this->auth->registrationUser();
             case '/registrationadmin':

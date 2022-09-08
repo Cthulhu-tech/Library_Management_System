@@ -107,6 +107,12 @@ class Authorization extends JWThandler implements IAuthorization
         return true;
     }
 
+    public function lagout()
+    {
+        $this->setRefreshToken('refresh', '', -time());
+        echo $this->messageResponse(200, 'You are lagout');
+    }
+
     public function refresh()
     {
         $refresh = $this->getCookie('refresh');

@@ -82,6 +82,7 @@ interface IJWThandler
 
 interface IAuthorization
 {
+    function lagout();
     function refresh();
     function loginUser();
     function loginAdmin();
