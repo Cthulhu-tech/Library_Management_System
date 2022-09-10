@@ -1,5 +1,9 @@
 <?php
 
+use parallel\{Channel, Runtime};
+
+$ch = new Channel();
+
 require './src/interface/interface.php';
 require './src/utils/env/env.php';
 require './src/handler.php';
